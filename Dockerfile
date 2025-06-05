@@ -14,7 +14,7 @@ RUN npm install --legacy-peer-deps
 RUN npm run build
 
 # Install serve to host the production build
-RUN npm install -g serve
+RUN npm install - serve
 
 Run npm audit fix --force
 
