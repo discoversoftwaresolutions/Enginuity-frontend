@@ -1,24 +1,33 @@
-# Use official Node.js runtime
-FROM node:18-alpine
+# Base image
+FROM node:18-alpine as build
 
-# Set working directory inside container
+# Set working directory
 WORKDIR /app
 
-# Copy package.json (skip package-lock.json if missing)
+# Copy package.json (skip package-lock.json)
 COPY package.json ./
 
-# Install dependencies (this will generate package-lock.json)
+# Install dependencies with legacy peer deps handling
 RUN npm install --legacy-peer-deps
 
-run the "build" package script
-# Then copy the remaining project files
+# Copy all other source files
 COPY . .
 
+# Build the React app
+RUN npm run build
 
-RUN npm run build.
+# Final stage: serving via lightweight web server
+FROM node:18-alpine as production
+WORKDIR /app
 
-# Expose frontend port
+# Install static file server
+RUN npm install -g serve
+
+# Copy built app from previous stage
+COPY --from=build /app/build ./build
+
+# Expose port for Railway
 EXPOSE 3000
 
-# Start the app
-CMD ["npm", "start"]
+# Start the server
+CMD ["serve", "-s", "build", "-l", "3000"]
