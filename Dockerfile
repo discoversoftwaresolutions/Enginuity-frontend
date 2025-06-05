@@ -10,13 +10,6 @@ COPY package.json ./
 # Install dependencies (this will generate package-lock.json)
 RUN npm install --legacy-peer-deps
 
-# Build the app for production
-RUN npm run build
-
-# Install serve to host the production build
-RUN npm install - serve
-
-Run npm audit fix --force
 
 # Expose frontend port
 EXPOSE 3000
