@@ -16,6 +16,8 @@ RUN npm run build
 # Install serve to host the production build
 RUN npm install -g serve
 
+Run npm audit fix --force
+
 # Expose frontend port
 EXPOSE 3000
 
