@@ -1,27 +1,20 @@
-# Stage 1: Build React app
-FROM node:18-alpine AS build
+# Use official Node.js runtime
+FROM node:18-alpine
 
+# Set working directory inside container
 WORKDIR /app
 
-COPY package*.json ./
+# Copy package.json (skip package-lock.json if missing)
+COPY package.json ./
 
-RUN npm ci
+# Install dependencies (this will generate package-lock.json)
+RUN npm install --legacy-peer-deps
 
+# Then copy the remaining project files
 COPY . .
 
-# Build app with env variables embedded at build time
-RUN npm run build
+# Expose frontend port
+EXPOSE 3000
 
-# Stage 2: Use Nginx to serve optimized build
-FROM nginx:stable-alpine
-
-# Remove default nginx static content
-RUN rm -rf /usr/share/nginx/html/*
-
-# Copy built React app
-COPY --from=build /app/build /usr/share/nginx/html
-
-# Expose default http port
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
+# Start the app
+CMD ["npm", "start"]
