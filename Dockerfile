@@ -13,7 +13,8 @@ RUN npm install --legacy-peer-deps
 # Then copy the remaining project files
 COPY . .
 
-npm run build.
+
+RUN npm run build.
 
 # Expose frontend port
 EXPOSE 3000
