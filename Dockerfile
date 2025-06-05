@@ -16,11 +16,8 @@ RUN npm run build
 # Install serve to host the production build
 RUN npm install -g serve
 
-# Then copy the remaining project files
-COPY . .
-
 # Expose frontend port
 EXPOSE 3000
 
-# Start the app
-CMD ["npm", "start"]
+
+CMD ["serve", "-s", "build", "-l", "3000"]
