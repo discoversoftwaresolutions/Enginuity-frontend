@@ -10,6 +10,7 @@ COPY package.json ./
 # Install dependencies (this will generate package-lock.json)
 RUN npm install --legacy-peer-deps
 
+run the "build" package script
 # Then copy the remaining project files
 COPY . .
 
