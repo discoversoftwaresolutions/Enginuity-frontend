@@ -22,4 +22,4 @@ Run npm audit fix --force
 EXPOSE 3000
 
 
-CMD ["serve", "-s", "build", "-l", "3000"]
+CMD ["serve", "build", "3000"]
