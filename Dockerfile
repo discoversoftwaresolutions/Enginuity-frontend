@@ -29,5 +29,7 @@ COPY --from=build /app/build ./build
 # Expose port for Railway
 EXPOSE 3000
 
-# Start the server
-CMD ["serve", "-s", "build", "-l", "3000"]
+FROM nginx:alpine
+COPY --from=build /app/build /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
