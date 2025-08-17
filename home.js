@@ -13,7 +13,7 @@ const Home = () => {
   return (
     <Router>
       <div className="home-dashboard">
-        <h1>🧠 Enginuity Demo Marketplace</h1>
+        <h1>🧠 Enginuity</h1>
         <p>Explore each module below:</p>
 
         <nav>
