@@ -1,25 +1,36 @@
 {
   "name": "enginuity-frontend",
   "version": "1.0.0",
-  "description": "Discover Marketplace Demo UI",
+  "description": "Enginuity",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test"
   },
   "dependencies": {
+    "@splinetool/react-spline": "^2.2.6",
+    "@splinetool/runtime": "^1.9.28",
     "ajv": "^8.12.0",
     "ajv-keywords": "^3.5.2",
     "axios": "^1.6.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.16.0",
+    "react-router-dom": "^6.8.1",
     "react-scripts": "5.0.1",
+    "tailwindcss-animate": "1.0.7",
     "three": "^0.158.0"
   },
   "devDependencies": {
+    "@animaapp/vite-plugin-screen-graph": "^0.1.5",
+    "@types/react": "18.2.0",
+    "@types/react-dom": "18.2.0",
+    "@vitejs/plugin-react": "4.3.4",
+    "esbuild": "0.24.0",
     "eslint": "^8.45.0",
-    "typescript": "^5.3.3"
+    "globals": "15.12.0",
+    "tailwindcss": "3.4.16",
+    "typescript": "^5.3.3",
+    "vite": "6.0.4"
   },
   "engines": {
     "node": ">=16.0.0"
