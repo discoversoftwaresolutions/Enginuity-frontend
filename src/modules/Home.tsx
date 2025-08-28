@@ -1,5 +1,4 @@
-```tsx
-// src/modules/Home.tsx
+
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from "react-router-dom";
 import AeroIQ from "./AeroIQ";
@@ -7,10 +6,11 @@ import CircuitIQ from "./CircuitIQ";
 import CodeMotion from "./CodeMotion";
 import FlowCore from "./FlowCore";
 import FusionX from "./FusionX";
-import ProtoPrint from "./ProtoPrint";
-import SimulAI from "./SimulAI";
+import ProntoPrint from "./ProntoPrint";
+import SimuAI from "./SimuAI";
 import VisuAI from "./VisuAI";
 import { SystemStatus } from "../components/SystemStatus";
+
 const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
@@ -358,4 +358,3 @@ const stats = [
 ];
 
 export default Home;
-```
