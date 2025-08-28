@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes, Link, useLocation } from "react-router-dom";
 import AeroIQ from "./AeroIQ";
-import FlowCore from "./modules/FlowCore";
+import FlowCore from "./FlowCore";
 import FusionX from "./modules/FusionX";
 import SimulAI from "./modules/SimulAI";
 import VisuAI from "./modules/VisuAI";
