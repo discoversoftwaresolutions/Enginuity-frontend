@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from "react";
-import { Routes, Route, Navigate, Link, Outlet } from "react-router-dom";
+import { Routes, Route, Navigate, NavLink, Outlet } from "react-router-dom";
 
 const Home          = lazy(() => import("./modules/Home"));
 const SimulAI       = lazy(() => import("./modules/SimulAI"));
@@ -13,21 +13,51 @@ const FusionX       = lazy(() => import("./modules/FusionX"));
 const LayoutPreview = lazy(() => import("./modules/LayoutPreview"));
 const NotFound      = lazy(() => import("./modules/NotFound"));
 
+const linkStyle: React.CSSProperties = { textDecoration: "none", padding: "6px 10px", borderRadius: 8 };
 const Shell: React.FC = () => (
   <>
-    <header style={{padding:"12px 16px", borderBottom:"1px solid #e5e7eb", display:"flex", gap:12, flexWrap:"wrap"}}>
-      <Link to="/">Home</Link>
-      <Link to="/simulai">SimulAI</Link>
-      <Link to="/visuai">VisuAI</Link>
-      <Link to="/protoprint">ProtoPrint</Link>
-      <Link to="/circuitiq">CircuitIQ</Link>
-      <Link to="/codemotion">CodeMotion</Link>
-      <Link to="/flowcore">FlowCore</Link>
-      <Link to="/aeroiq">AeroIQ</Link>
-      <Link to="/fusionx">FusionX</Link>
-      <Link to="/layout-preview">Layout Preview</Link>
+    <header
+      style={{
+        padding: "12px 16px",
+        borderBottom: "1px solid #e5e7eb",
+        display: "flex",
+        gap: 12,
+        flexWrap: "wrap",
+      }}
+    >
+      <NavLink to="/" end style={({ isActive }) => ({
+        ...linkStyle,
+        background: isActive ? "#eef2ff" : "transparent"
+      })}>Home</NavLink>
+      <NavLink to="/simulai" style={({ isActive }) => ({
+        ...linkStyle, background: isActive ? "#eef2ff" : "transparent"
+      })}>SimulAI</NavLink>
+      <NavLink to="/visuai" style={({ isActive }) => ({
+        ...linkStyle, background: isActive ? "#eef2ff" : "transparent"
+      })}>VisuAI</NavLink>
+      <NavLink to="/protoprint" style={({ isActive }) => ({
+        ...linkStyle, background: isActive ? "#eef2ff" : "transparent"
+      })}>ProtoPrint</NavLink>
+      <NavLink to="/circuitiq" style={({ isActive }) => ({
+        ...linkStyle, background: isActive ? "#eef2ff" : "transparent"
+      })}>CircuitIQ</NavLink>
+      <NavLink to="/codemotion" style={({ isActive }) => ({
+        ...linkStyle, background: isActive ? "#eef2ff" : "transparent"
+      })}>CodeMotion</NavLink>
+      <NavLink to="/flowcore" style={({ isActive }) => ({
+        ...linkStyle, background: isActive ? "#eef2ff" : "transparent"
+      })}>FlowCore</NavLink>
+      <NavLink to="/aeroiq" style={({ isActive }) => ({
+        ...linkStyle, background: isActive ? "#eef2ff" : "transparent"
+      })}>AeroIQ</NavLink>
+      <NavLink to="/fusionx" style={({ isActive }) => ({
+        ...linkStyle, background: isActive ? "#eef2ff" : "transparent"
+      })}>FusionX</NavLink>
+      <NavLink to="/layout-preview" style={({ isActive }) => ({
+        ...linkStyle, background: isActive ? "#eef2ff" : "transparent"
+      })}>Layout Preview</NavLink>
     </header>
-    <main style={{padding:"16px"}}>
+    <main style={{ padding: "16px" }}>
       <Outlet />
     </main>
   </>
