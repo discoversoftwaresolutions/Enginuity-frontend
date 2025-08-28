@@ -3,7 +3,7 @@ import React, { Suspense, lazy } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
 const Home       = lazy(() => import("./modules/Home"));
-const SimulAI    = lazy(() => import("./modules/SimulAI"));
+const SimuAI    = lazy(() => import("./modules/SimuAI"));
 const VisuAI     = lazy(() => import("./modules/VisuAI"));
 const ProntoPrint = lazy(() => import("./modules/ProntoPrint"));
 const CircuitIQ  = lazy(() => import("./modules/CircuitIQ"));
@@ -16,7 +16,7 @@ const App: React.FC = () => (
   <Suspense fallback={<div>Loading…</div>}>
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/simulai" element={<SimulAI />} />
+      <Route path="/simuai" element={<SimuAI />} />
       <Route path="/visuai" element={<VisuAI />} />
       <Route path="/prontoprint" element={<ProntoPrint />} />
       <Route path="/circuitiq" element={<CircuitIQ />} />
