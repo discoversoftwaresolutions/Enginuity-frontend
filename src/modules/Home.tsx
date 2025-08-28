@@ -1,6 +1,5 @@
 import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
-import React from "react";
 import AeroIQ from "./AeroIQ";
 import FlowCore from "./FlowCore";
 import FusionX from "./FusionX";
