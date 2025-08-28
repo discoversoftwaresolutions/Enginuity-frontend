@@ -11,7 +11,6 @@ const CodeMotion = lazy(() => import("./modules/CodeMotion"));
 const FlowCore   = lazy(() => import("./modules/FlowCore"));
 const AeroIQ     = lazy(() => import("./modules/AeroIQ"));
 const FusionX    = lazy(() => import("./modules/FusionX"));
-const NotFound   = lazy(() => import("./modules/NotFound"));
 
 const App: React.FC = () => (
   <Suspense fallback={<div>Loading…</div>}>
@@ -25,8 +24,7 @@ const App: React.FC = () => (
       <Route path="/flowcore" element={<FlowCore />} />
       <Route path="/aeroiq" element={<AeroIQ />} />
       <Route path="/fusionx" element={<FusionX />} />
-      <Route path="/404" element={<NotFound />} />
-      <Route path="*" element={<Navigate to="/404" replace />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   </Suspense>
 );
