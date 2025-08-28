@@ -1,4 +1,4 @@
-
+// src/modules/Home.tsx
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from "react-router-dom";
 import AeroIQ from "./AeroIQ";
@@ -94,10 +94,16 @@ const Dashboard = () => {
                   ].map((metric) => (
                     <div key={metric.name} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0">
                       <div className="flex items-center space-x-3">
-                        <span className={`text-lg ${
-                          metric.status === 'operational' ? 'text-green-500' :
-                          metric.status === 'maintenance' ? 'text-yellow-500' : 'text-red-500'
-                        }`}>
+                        <span
+                          className={
+                            "text-lg " +
+                            (metric.status === 'operational'
+                              ? 'text-green-500'
+                              : metric.status === 'maintenance'
+                                ? 'text-yellow-500'
+                                : 'text-red-500')
+                          }
+                        >
                           {metric.status === 'operational' ? '●' : metric.status === 'maintenance' ? '◐' : '●'}
                         </span>
                         <span className="text-gray-700 font-medium">{metric.name}</span>
