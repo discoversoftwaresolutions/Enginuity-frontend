@@ -1,3 +1,4 @@
+```tsx
 // src/modules/Home.tsx
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from "react-router-dom";
@@ -6,8 +7,8 @@ import CircuitIQ from "./CircuitIQ";
 import CodeMotion from "./CodeMotion";
 import FlowCore from "./FlowCore";
 import FusionX from "./FusionX";
-import ProntoPrint from "./ProntoPrint";
-import SimuAI from "./SimuAI";
+import ProtoPrint from "./ProtoPrint";
+import SimulAI from "./SimulAI";
 import VisuAI from "./VisuAI";
 import { SystemStatus } from "../components/SystemStatus";
 const Dashboard = () => {
@@ -357,3 +358,4 @@ const stats = [
 ];
 
 export default Home;
+```
