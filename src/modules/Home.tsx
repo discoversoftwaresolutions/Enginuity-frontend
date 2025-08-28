@@ -1,15 +1,14 @@
-// src/modules/Home.tsx — corrected import block (file lives in src/modules)
 import React from "react";
-import { Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Link, useLocation } from "react-router-dom";
 import AeroIQ from "./AeroIQ";
 import FlowCore from "./FlowCore";
-import FusionX from "./FusionX";
-import SimuAI from "./SimuAI";
-import VisuAI from "./VisuAI";
-import ProntoPrint from "./ProntoPrint";
-import CircuitIQ from "./CircuitIQ";
-import CodeMotion from "./CodeMotion";
-import { SystemStatus } from "../components/SystemStatus";
+import FusionX from "./modules/FusionX";
+import SimulAI from "./modules/SimulAI";
+import VisuAI from "./modules/VisuAI";
+import ProtoPrint from "./modules/ProtoPrint";
+import CircuitIQ from "./modules/CircuitIQ";
+import CodeMotion from "./modules/CodeMotion";
+import { SystemStatus } from "./components/SystemStatus";
 
 const Dashboard = () => {
   return (
