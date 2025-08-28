@@ -3,7 +3,7 @@ import { fetchData } from "../utils/apiClient";
 const API_BASE_URL = "https://enginuity-production.up.railway.app";
 
 // Function to fetch supersonic boom calculations
-export async function getWimpavefronts(mach: number, altitude_ft: number) {
+export async function getWavefronts(mach: number, altitude_ft: number) {
     try {
         const response = await fetchData(`${API_BASE_URL}/wavefronts`, "POST", { mach, altitude_ft });
         return response;
@@ -58,7 +58,7 @@ export async function getFlightEnvelope(aircraft_type: string, conditions: any) 
 }
 
 const aeroiqService = {
-    getWimpavefronts,
+    getWavefronts,
     getOrbit,
     getHohmannTransfer,
     getCFDAnalysis,
