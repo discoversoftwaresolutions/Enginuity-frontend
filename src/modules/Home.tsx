@@ -6,8 +6,8 @@ import CircuitIQ from "./CircuitIQ";
 import CodeMotion from "./CodeMotion";
 import FlowCore from "./FlowCore";
 import FusionX from "./FusionX";
-import ProntoPrint from "./ProntoPrint";
-import SimuAI from "./SimuAI";
+import ProtoPrint from "./ProtoPrint";
+import SimulAI from "./SimulAI";
 import VisuAI from "./VisuAI";
 import { SystemStatus } from "../components/SystemStatus";
 
