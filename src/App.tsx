@@ -1,10 +1,10 @@
-  import React, { useState, useEffect } from "react";
-import SimulAI from "./simulai";
-import ProtoPrint from "./protoprint";
-import FusionX from "./fusionx";
-import FlowCore from "./flowcore";
-import CodeMotion from "./codemotion";
-import CircuitIQ from "./circuitiq";
+import React, { useState, useEffect } from "react";
+import SimulAI from "./modules/simulai";
+import ProtoPrint from "./modules/protoprint";
+import FusionX from "./modules/fusionx";
+import FlowCore from "./modules/flowcore";
+import CodeMotion from "./modules/codemotion";
+import CircuitIQ from "./modules/circuitiq";
 import { computeOrbit, computeHohmannTransfer } from "/services/orbital";
 import { plotOrbit3D } from "../services/orbital3D";
 
