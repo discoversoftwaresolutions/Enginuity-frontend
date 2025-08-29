@@ -19,7 +19,7 @@ type ModuleDef = {
   description: string;
   tags: string[];
   iconPath: string;
-  element: React.LazyExoticComponent<() => JSX.Element>;
+  element: React.LazyExoticComponent<React.ComponentType<any>>;
 };
 
 const MODULES: ModuleDef[] = [
