@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+  import React, { useState, useEffect } from "react";
 import SimulAI from "./simulai";
 import ProtoPrint from "./protoprint";
 import FusionX from "./fusionx";
@@ -19,4 +19,24 @@ const moduleMap = {
   "VisuAI - Visual Intelligence": "visuai",
   "ProtoPrint - Additive MFG": "protoprint",
   "CircuitIQ - Electronics": "circuitiq",
-  "CodeMotion - Robotics Code": "codemotion",
+  "CodeMotion - Robotics Code": "codemotion"
+};
+
+export default function ModuleLoader({ moduleName }: { moduleName: string }) {
+  switch (moduleMap[moduleName]) {
+    case "simulai":
+      return <SimulAI />;
+    case "protoprint":
+      return <ProtoPrint />;
+    case "fusionx":
+      return <FusionX />;
+    case "flowcore":
+      return <FlowCore />;
+    case "codemotion":
+      return <CodeMotion />;
+    case "circuitiq":
+      return <CircuitIQ />;
+    default:
+      return <div>Module not found</div>;
+  }
+}
