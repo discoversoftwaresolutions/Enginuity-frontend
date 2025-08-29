@@ -1,5 +1,5 @@
 import React from "react";
-import ModuleLoader from "./ModuleLoader";
+import ModuleLoader from "./modules/ModuleLoader";
 
 function App() {
   return (
