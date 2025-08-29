@@ -6,7 +6,6 @@ import {
   getHohmannTransfer,
   getCFDAnalysis,
 } from "../services/aeroiqService";
-import FileUpload from "../components/FileUpload";
 import { SimulationEngine } from "../utils/simulationEngine";
 
 /* ──────────────────────────────────────────────────────────────────────────────
