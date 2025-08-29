@@ -2,5 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-/* your global styles */
-html, body, #root { height: 100%; }
+/* Optional: subtle scrollbar for sidebar/content */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(71 85 105) transparent;
+}
+*::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background: rgb(71 85 105);
+  border-radius: 9999px;
+}
