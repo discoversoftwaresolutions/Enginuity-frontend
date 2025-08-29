@@ -1,20 +1,15 @@
+// src/components/FileUpload.tsx
 import React, { useMemo, useRef, useState } from "react";
 
 export interface FileUploadProps {
   onFileUpload: (files: File[]) => void;
-  /**
-   * Accept patterns for the file input, e.g. [".csv", "image/*", "application/json"].
-   * Defaults to ["*/*"].
-   */
-  acceptedTypes?: string[];
-  /** Maximum number of files per selection. Defaults to 5. */
-  maxFiles?: number;
-  /** Maximum size per file in MB. Defaults to 25. */
-  maxSize?: number;
+  acceptedTypes?: string[]; // Example: [".csv", "image/*", "application/json"]
+  maxFiles?: number;        // Max number of files per selection
+  maxSize?: number;         // Max size per file in MB
   className?: string;
 }
 
-export const FileUpload: React.FC<FileUploadProps> = ({
+const FileUpload: React.FC<FileUploadProps> = ({
   onFileUpload,
   acceptedTypes = ["*/*"],
   maxFiles = 5,
@@ -24,14 +19,15 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // Build the accept attribute (e.g., "image/*,application/json,.csv")
+  // Build input accept attribute string
   const acceptAttr = useMemo(() => {
     return acceptedTypes
-      .map((p) => {
-        const t = p.trim();
-        // Normalize "image/" -> "image/*"
-        if (t.endsWith("/") && !t.endsWith("/*")) return `${t}*`;
-        return t;
+      .map((pattern) => {
+        const trimmed = pattern.trim();
+        if (trimmed.endsWith("/") && !trimmed.endsWith("/*")) {
+          return `${trimmed}*`; // normalize "image/" → "image/*"
+        }
+        return trimmed;
       })
       .join(",");
   }, [acceptedTypes]);
@@ -45,31 +41,13 @@ export const FileUpload: React.FC<FileUploadProps> = ({
     for (const raw of acceptedTypes) {
       const pat = raw.trim().toLowerCase();
 
-      // Wildcard: any type
-      if (pat === "*/*") return true;
-
-      // Extension match: ".csv", ".json", etc.
-      if (pat.startsWith(".")) {
-        if (name.endsWith(pat)) return true;
-        continue;
-      }
-
-      // MIME family: "image/*", "video/*"
-      if (pat.endsWith("/*")) {
-        const family = pat.slice(0, -1); // keep trailing slash
-        if (type.startsWith(family)) return true;
-        continue;
-      }
-
-      // MIME prefix ending with slash (normalized to family above)
-      if (pat.endsWith("/")) {
-        if (type.startsWith(pat)) return true;
-        continue;
-      }
-
-      // Exact MIME match: "application/json"
-      if (type === pat) return true;
+      if (pat === "*/*") return true; // allow any type
+      if (pat.startsWith(".") && name.endsWith(pat)) return true; // extension
+      if (pat.endsWith("/*") && type.startsWith(pat.slice(0, -1))) return true; // family
+      if (pat.endsWith("/") && type.startsWith(pat)) return true; // mime prefix
+      if (type === pat) return true; // exact match
     }
+
     return false;
   };
 
@@ -102,9 +80,12 @@ export const FileUpload: React.FC<FileUploadProps> = ({
 
     const selected = Array.from(list).slice(0, Math.max(1, maxFiles));
     const ok = validate(selected);
-    if (ok.length) onFileUpload(ok);
 
-    // Reset so choosing the same file fires onChange again
+    if (ok.length) {
+      onFileUpload(ok);
+    }
+
+    // reset so choosing the same file again still triggers change
     if (inputRef.current) {
       inputRef.current.value = "";
     }
