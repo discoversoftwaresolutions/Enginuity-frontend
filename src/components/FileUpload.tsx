@@ -1,129 +1,87 @@
-import React, { useCallback, useRef, useState } from "react";
+// src/components/FileUpload.tsx
+import React, { useRef, useState } from "react";
 
-export type FileUploadProps = {
-  /** Callback invoked with validated files */
+export interface FileUploadProps {
   onFileUpload: (files: File[]) => void;
-  /** Accept list (extensions like ".csv", ".json", or mime patterns like "image/*") */
-  acceptedTypes?: string[];
-  /** Maximum number of files allowed */
-  maxFiles?: number;
-  /** Maximum size per file in MB */
-  maxSize?: number;
-  /** Optional extra class names for the root */
+  acceptedTypes?: string[]; // e.g. [".csv", "image/*"]
+  maxFiles?: number;        // per upload
+  maxSize?: number;         // MB per file
   className?: string;
-};
-
-function classNames(...xs: Array<string | false | null | undefined>) {
-  return xs.filter(Boolean).join(" ");
 }
 
 export const FileUpload: React.FC<FileUploadProps> = ({
   onFileUpload,
   acceptedTypes = ["*/*"],
   maxFiles = 5,
-  maxSize = 25, // MB
+  maxSize = 25,
   className,
 }) => {
-  const [dragActive, setDragActive] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const inputRef = useRef<HTMLInputElement | null>(null);
+  const [drag, setDrag] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const acceptAttr = acceptedTypes.join(",");
 
-  const validateFiles = useCallback(
-    (files: File[]): File[] => {
-      setError(null);
-      if (!files.length) return [];
-
-      const maxBytes = maxSize * 1024 * 1024;
-
-      // Enforce count
-      if (files.length > maxFiles) {
-        setError(`Too many files. Max allowed is ${maxFiles}.`);
-        return [];
-      }
-
-      // Enforce size & type
-      const ok: File[] = [];
-      for (const f of files) {
-        if (f.size > maxBytes) {
-          setError(`"${f.name}" exceeds ${maxSize} MB limit.`);
-          return [];
-        }
-        if (!isAcceptedType(f, acceptedTypes)) {
-          setError(`"${f.name}" is not an accepted type.`);
-          return [];
-        }
-        ok.push(f);
-      }
-      return ok;
-    },
-    [acceptedTypes, maxFiles, maxSize]
-  );
-
-  const isAcceptedType = (file: File, patterns: string[]) => {
-    if (!patterns.length) return true;
-    // If any pattern matches, accept
-    return patterns.some((p) => {
-      const pattern = p.trim().toLowerCase();
-      if (pattern === "*/*") return true;
-
-      if (pattern.startsWith(".")) {
-        // extension check
-        return file.name.toLowerCase().endsWith(pattern);
-      }
-      if (pattern.endsWith("/*")) {
-        // mime family, e.g., image/*
-        const family = pattern.slice(0, -2);
-        return file.type.toLowerCase().startsWith(`${family}/`);
-      }
-      // exact mime, e.g., application/json
-      return file.type.toLowerCase() === pattern;
+  const isAccepted = (file: File) => {
+    if (!acceptedTypes.length) return true;
+    const name = file.name.toLowerCase();
+    const type = file.type.toLowerCase();
+    return acceptedTypes.some((p) => {
+      const pat = p.toLowerCase().trim();
+      if (pat === "*/*") return true;
+      if (pat.startsWith(".")) return name.endsWith(pat);
+      if (pat.endsWith("/*")) return type.startsWith(pat.slice(0, -1));
+      return type === pat;
     });
   };
 
-  const handleFiles = (files: FileList | null) => {
-    if (!files) return;
-    const arr = Array.from(files);
-    const validated = validateFiles(arr);
-    if (validated.length) {
-      onFileUpload(validated);
+  const validate = (files: File[]) => {
+    const maxBytes = maxSize * 1024 * 1024;
+    if (files.length > maxFiles) {
+      setError(`Too many files. Max ${maxFiles}.`);
+      return [];
     }
+    for (const f of files) {
+      if (f.size > maxBytes) {
+        setError(`"${f.name}" exceeds ${maxSize} MB.`);
+        return [];
+      }
+      if (!isAccepted(f)) {
+        setError(`"${f.name}" is not an accepted type.`);
+        return [];
+      }
+    }
+    setError(null);
+    return files;
   };
 
-  const onDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
-    handleFiles(e.dataTransfer.files);
-  };
-  const onDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!dragActive) setDragActive(true);
-  };
-  const onDragLeave = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
+  const handle = (list: FileList | null) => {
+    if (!list) return;
+    const files = validate(Array.from(list));
+    if (files.length) onFileUpload(files);
   };
 
   return (
-    <div className={classNames("space-y-3", className)}>
+    <div className={className}>
       <div
-        className={classNames(
-          "rounded-lg border-2 border-dashed p-6 text-center transition-colors",
-          dragActive ? "border-blue-500 bg-slate-800/60" : "border-slate-600 bg-slate-800/40"
-        )}
-        onDrop={onDrop}
-        onDragOver={onDragOver}
-        onDragLeave={onDragLeave}
+        className={`rounded-lg border-2 border-dashed p-6 text-center transition-colors ${
+          drag ? "border-blue-500 bg-slate-800/60" : "border-slate-600 bg-slate-800/40"
+        }`}
+        onDragOver={(e) => {
+          e.preventDefault(); e.stopPropagation(); setDrag(true);
+        }}
+        onDragLeave={(e) => {
+          e.preventDefault(); e.stopPropagation(); setDrag(false);
+        }}
+        onDrop={(e) => {
+          e.preventDefault(); e.stopPropagation(); setDrag(false); handle(e.dataTransfer.files);
+        }}
         role="button"
-        aria-label="File uploader"
         tabIndex={0}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") inputRef.current?.click();
         }}
+        aria-label="File uploader"
       >
         <div className="flex flex-col items-center gap-2">
           <svg className="w-6 h-6 text-slate-300" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -140,24 +98,21 @@ export const FileUpload: React.FC<FileUploadProps> = ({
             </button>
           </p>
           <p className="text-slate-400 text-xs">
-            Accepted: {acceptedTypes.join(", ") || "any"} • Max files: {maxFiles} • Max size: {maxSize} MB each
+            Accepted: {acceptedTypes.join(", ")} • Max files: {maxFiles} • Max size: {maxSize} MB each
           </p>
         </div>
+
         <input
           ref={inputRef}
           type="file"
           className="hidden"
           multiple={maxFiles > 1}
           accept={acceptAttr}
-          onChange={(e) => handleFiles(e.target.files)}
+          onChange={(e) => handle(e.target.files)}
         />
       </div>
 
-      {error && (
-        <div className="text-xs text-red-400">
-          {error}
-        </div>
-      )}
+      {error && <div className="text-xs text-red-400 mt-2">{error}</div>}
     </div>
   );
 };
