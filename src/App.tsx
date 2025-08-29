@@ -261,19 +261,6 @@ function DashboardMain() {
                 </div>
               ))}
             </div>
-
-            <div className="mt-4 pt-4 border-t border-gray-200">
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <div className="text-gray-600">Total Compute</div>
-                  <div className="text-gray-900 font-mono">847.2 TFLOPS</div>
-                </div>
-                <div>
-                  <div className="text-gray-600">Memory Usage</div>
-                  <div className="text-gray-900 font-mono">2.1 TB / 4.0 TB</div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
 
