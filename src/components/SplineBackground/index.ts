@@ -1,1 +1,0 @@
-export { SplineBackground } from "./SplineBackground";
