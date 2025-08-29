@@ -3,9 +3,9 @@ import React, { useRef, useState } from "react";
 
 export interface FileUploadProps {
   onFileUpload: (files: File[]) => void;
-  acceptedTypes?: string[]; // e.g. [".csv", "image/*"]
-  maxFiles?: number;        // per upload
-  maxSize?: number;         // MB per file
+  acceptedTypes?: string[];
+  maxFiles?: number;
+  maxSize?: number; // MB
   className?: string;
 }
 
@@ -67,20 +67,12 @@ export const FileUpload: React.FC<FileUploadProps> = ({
         className={`rounded-lg border-2 border-dashed p-6 text-center transition-colors ${
           drag ? "border-blue-500 bg-slate-800/60" : "border-slate-600 bg-slate-800/40"
         }`}
-        onDragOver={(e) => {
-          e.preventDefault(); e.stopPropagation(); setDrag(true);
-        }}
-        onDragLeave={(e) => {
-          e.preventDefault(); e.stopPropagation(); setDrag(false);
-        }}
-        onDrop={(e) => {
-          e.preventDefault(); e.stopPropagation(); setDrag(false); handle(e.dataTransfer.files);
-        }}
+        onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); setDrag(true); }}
+        onDragLeave={(e) => { e.preventDefault(); e.stopPropagation(); setDrag(false); }}
+        onDrop={(e) => { e.preventDefault(); e.stopPropagation(); setDrag(false); handle(e.dataTransfer.files); }}
         role="button"
         tabIndex={0}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") inputRef.current?.click();
-        }}
+        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") inputRef.current?.click(); }}
         aria-label="File uploader"
       >
         <div className="flex flex-col items-center gap-2">
