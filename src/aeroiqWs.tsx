@@ -1,56 +1,61 @@
-const WebSocket = require("ws");
 
-const API_BASE_URL = "wss://enginuity-production.up.railway.app/aeroiq";
+const DEFAULT_API_BASE_URL = "wss://enginuity-production.up.railway.app/aeroiq";
 
 /**
- * Sends a JSON command to an AeroIQ WebSocket endpoint and receives the response.
- * @param {string} uri - WebSocket URI (e.g., "wss://yourserver.com/ws/aeroiq")
- * @param {object} payload - Command payload to send
- * @param {number} timeout - Timeout in milliseconds (default: 10,000 ms)
- * @returns {Promise<object>} - Decoded response from the server
+ * Sends a JSON command to an AeroIQ WebSocket endpoint and resolves with the first message.
+ * Browser-safe: uses window.WebSocket (no Node 'ws' import).
  */
-async function sendAeroIQCommand(uri, payload, timeout = 10000) {
-    return new Promise((resolve, reject) => {
-        const ws = new WebSocket(uri);
+export async function sendAeroIQCommand(
+  uri: string = DEFAULT_API_BASE_URL,
+  payload: unknown,
+  timeout = 10000
+): Promise<any> {
+  return new Promise((resolve, reject) => {
+    const ws = new window.WebSocket(uri);
 
-        ws.on("open", () => {
-            console.log(`🔗 Connected to WebSocket: ${uri}`);
-            console.log(`📤 Sending payload:`, payload);
-            ws.send(JSON.stringify(payload));
-        });
+    let finished = false;
+    const finish = (fn: () => void) => {
+      if (finished) return;
+      finished = true;
+      try { ws.close(); } catch {}
+      fn();
+    };
 
-        ws.on("message", (data) => {
-            console.log(`📥 Received response:`, data);
-            try {
-                resolve(JSON.parse(data));
-            } catch (error) {
-                reject({ error: "Invalid JSON response" });
-            }
-            ws.close();
-        });
+    ws.onopen = () => {
+      try {
+        ws.send(JSON.stringify(payload));
+      } catch {
+        finish(() => reject({ error: "Failed to serialize payload" }));
+      }
+    };
 
-        ws.on("error", (error) => {
-            console.error("❌ WebSocket error:", error);
-            reject({ error: error.message });
-        });
+    ws.onmessage = (event) => {
+      finish(() => {
+        try {
+          resolve(JSON.parse(event.data as string));
+        } catch {
+          resolve({ raw: event.data });
+        }
+      });
+    };
 
-        ws.on("close", () => {
-            console.log("🔌 WebSocket connection closed.");
-        });
+    ws.onerror = () => {
+      finish(() => reject({ error: "WebSocket error" }));
+    };
 
-        setTimeout(() => {
-            reject({ error: "⏱ Timeout while waiting for server response" });
-            ws.close();
-        }, timeout);
-    });
+    ws.onclose = () => {
+      // If it closes before we finish, ensure we reject once
+      finish(() => reject({ error: "Connection closed before response" }));
+    };
+
+    // Timeout guard
+    const timer = setTimeout(() => finish(() => reject({ error: "Timeout waiting for response" })), timeout);
+
+    // Clear timeout once we finish (resolve or reject)
+    const clear = () => clearTimeout(timer);
+    ws.addEventListener("close", clear, { once: true });
+    ws.addEventListener("error", clear, { once: true });
+    ws.addEventListener("message", clear, { once: true });
+    ws.addEventListener("open", () => {}, { once: true });
+  });
 }
-
-// ✅ Example Usage
-(async () => {
-    try {
-        const result = await sendAeroIQCommand(API_BASE_URL, { command: "start_sim" });
-        console.log("✅ WebSocket Response:", result);
-    } catch (error) {
-        console.error("❌ WebSocket Error:", error);
-    }
-})();
