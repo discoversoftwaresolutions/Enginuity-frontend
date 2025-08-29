@@ -1,11 +1,16 @@
-// src/components/FileUpload.tsx
 import React, { useMemo, useRef, useState } from "react";
 
 export interface FileUploadProps {
   onFileUpload: (files: File[]) => void;
-  acceptedTypes?: string[]; // e.g., [".csv", "image/*", "application/json"]
-  maxFiles?: number;        // per selection
-  maxSize?: number;         // MB per file
+  /**
+   * Accept patterns for the file input, e.g. [".csv", "image/*", "application/json"].
+   * Defaults to ["*/*"].
+   */
+  acceptedTypes?: string[];
+  /** Maximum number of files per selection. Defaults to 5. */
+  maxFiles?: number;
+  /** Maximum size per file in MB. Defaults to 25. */
+  maxSize?: number;
   className?: string;
 }
 
@@ -19,38 +24,51 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // Normalize patterns for <input accept> (e.g., "image/" -> "image/*")
+  // Build the accept attribute (e.g., "image/*,application/json,.csv")
   const acceptAttr = useMemo(() => {
     return acceptedTypes
       .map((p) => {
         const t = p.trim();
-        return t.endsWith("/") && !t.endsWith("/*") ? `${t}*` : t;
+        // Normalize "image/" -> "image/*"
+        if (t.endsWith("/") && !t.endsWith("/*")) return `${t}*`;
+        return t;
       })
       .join(",");
   }, [acceptedTypes]);
 
   const isAccepted = (file: File): boolean => {
     if (!acceptedTypes.length) return true;
+
     const name = file.name.toLowerCase();
     const type = (file.type || "").toLowerCase();
 
     for (const raw of acceptedTypes) {
       const pat = raw.trim().toLowerCase();
+
+      // Wildcard: any type
       if (pat === "*/*") return true;
+
+      // Extension match: ".csv", ".json", etc.
       if (pat.startsWith(".")) {
         if (name.endsWith(pat)) return true;
         continue;
       }
+
+      // MIME family: "image/*", "video/*"
       if (pat.endsWith("/*")) {
         const family = pat.slice(0, -1); // keep trailing slash
         if (type.startsWith(family)) return true;
         continue;
       }
+
+      // MIME prefix ending with slash (normalized to family above)
       if (pat.endsWith("/")) {
         if (type.startsWith(pat)) return true;
         continue;
       }
-      if (type === pat) return true; // exact MIME
+
+      // Exact MIME match: "application/json"
+      if (type === pat) return true;
     }
     return false;
   };
@@ -58,7 +76,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   const validate = (files: File[]): File[] => {
     const maxBytes = Math.max(1, maxSize) * 1024 * 1024;
 
-    if (files.length > maxFiles) {
+    if (files.length > Math.max(1, maxFiles)) {
       setError(`Too many files selected. Maximum allowed is ${maxFiles}.`);
       return [];
     }
@@ -86,8 +104,10 @@ export const FileUpload: React.FC<FileUploadProps> = ({
     const ok = validate(selected);
     if (ok.length) onFileUpload(ok);
 
-    // reset so choosing same file triggers onChange again
-    if (inputRef.current) inputRef.current.value = "";
+    // Reset so choosing the same file fires onChange again
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
   };
 
   return (
@@ -103,3 +123,5 @@ export const FileUpload: React.FC<FileUploadProps> = ({
     </div>
   );
 };
+
+export default FileUpload;
